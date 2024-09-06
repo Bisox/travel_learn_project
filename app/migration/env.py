@@ -10,27 +10,27 @@ from app.models import *
 
 from alembic import context
 
-# Добавьте свой путь к проекту
+# Добавьте свой путь к проекту  
 sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
 
-from config import settings  # Импортируйте настройки
+from config import settings  # Импортируйте настройки  
 from app.backend.database import Base  # Импортируйте вашу базу данных
 
-# Получение конфигурации Alembic
+# Получение конфигурации Alembic  
 config = context.config
 
-# Установка строки подключения из настроек
+# Установка строки подключения из настроек  
 config.set_main_option('sqlalchemy.url', settings.DATABASE_URL)
 
-# Интерпретация файла конфигурации для Python logging
+# Интерпретация файла конфигурации для Python logging  
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# Добавьте MetaData вашего модуля здесь
+# Добавьте MetaData вашего модуля здесь  
 target_metadata = Base.metadata
 
 
-# Двигатель конфигурации для offline режима
+# Двигатель конфигурации для offline режима  
 def run_migrations_offline():
     """Run migrations in 'offline' mode."""
     url = config.get_main_option("sqlalchemy.url")
