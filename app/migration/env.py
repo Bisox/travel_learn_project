@@ -6,7 +6,10 @@ from logging.config import fileConfig
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 from sqlalchemy import pool
 
-from app.models import *
+from app.models import (hotels,
+                        bookings,
+                        users,
+                        rooms)
 
 from alembic import context
 

@@ -2,15 +2,13 @@ from sqlalchemy import Column, Integer, String, JSON, ForeignKey
 from app.backend.database import Base
 from app.models import *
 
-class Hotel(Base):
-    __tablename__ = 'hotels'
-
+class Room(Base):
+    __tablename__ = 'rooms'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String, nullable=False)
-    location = Column(String, nullable=False)
+    hotel_id = Column(Integer, ForeignKey('hotels.id'))
+    name = Column(String)
+    description = Column(String)
+    price = Column(Integer)
     services = Column(JSON)
-    rooms_quantity = Column(Integer, nullable=False)
+    quantity = Column(Integer)
     image_id = Column(Integer)
-
-
-
