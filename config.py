@@ -10,11 +10,8 @@ class Settings(BaseSettings):
 
     SECRET_KEY: str
     ALGORITHM: str
-
-
     class Config:
         env_file = ".env"
-
 
     @property
     def DATABASE_URL(self):

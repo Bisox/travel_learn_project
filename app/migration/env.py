@@ -3,20 +3,15 @@ from os.path import abspath, dirname
 
 from logging.config import fileConfig
 
-from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
+from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy import pool
-
-from app.models import (hotels,
-                        bookings,
-                        users,
-                        rooms)
 
 from alembic import context
 
 # Добавьте свой путь к проекту  
 sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
 
-from config import settings  # Импортируйте настройки  
+from config import settings  # Импортируйте настройки
 from app.backend.database import Base  # Импортируйте вашу базу данных
 
 # Получение конфигурации Alembic  

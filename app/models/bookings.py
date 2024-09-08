@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, JSON, ForeignKey, Date, Computed
+from sqlalchemy import Column, Integer, ForeignKey, Date, Computed
 from app.backend.database import Base
 from app.models import *
 
