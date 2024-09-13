@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routers import bookings
+from app.routers import bookings, users
 
 app = FastAPI()
 
@@ -12,5 +12,5 @@ async def root():
 async def say_hello(name: str):
     return {"message": f"Hello {name}"}
 
-
+app.include_router(users.router)
 app.include_router(bookings.router)

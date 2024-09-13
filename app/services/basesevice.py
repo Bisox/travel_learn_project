@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import select, insert
 
 
 class BaseService:
@@ -22,3 +22,9 @@ class BaseService:
         query = select(cls.model).filter_by(**filter_by)
         result = await db.execute(query)
         return result.scalars().all()
+
+    @classmethod
+    async def add(cls, db, **data):
+        query = insert(cls.model).values(**data)
+        await db.execute(query)
+        await db.commit()
