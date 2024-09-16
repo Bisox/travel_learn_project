@@ -18,7 +18,7 @@ class SBooking(BaseModel):
         from_attributes = True
 
 
-class SUserRegister(BaseModel):
+class SUserAuth(BaseModel):
     email: EmailStr
     password: str
 
