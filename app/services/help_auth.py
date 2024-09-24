@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+from fastapi import Request, HTTPException
 from jose import jwt
 from passlib.context import CryptContext
 from pydantic import EmailStr
@@ -27,9 +28,23 @@ def create_access_token(data: dict) -> str:
 
 
 
+
 async def authenticate_user(db, email: EmailStr, password: str):
     user = await UserService.find_one_or_none(db, email=email)
     if not user and not verify_password(password, user.password):
         return None
     return user
 
+
+
+
+def get_token(request: Request):
+    token = request.cookies.get('booking_access_token')
+    if not token:
+        raise HTTPException(status_code=401, detail='Token is missing')
+    return token
+
+
+
+def get_current_user():
+    ...

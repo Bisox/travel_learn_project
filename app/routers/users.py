@@ -30,5 +30,5 @@ async def register_user(db: Annotated[AsyncSession, Depends(get_db)], response: 
         raise HTTPException(status_code=401, detail="Incorrect email or password")
     access_token = create_access_token({'sub': user.id})
     response.set_cookie(key='booking_access_token', value=access_token, httponly=True)
-    return access_token
+    return {'access_token': access_token}
 

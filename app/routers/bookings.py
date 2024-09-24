@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -14,9 +14,8 @@ router = APIRouter(
 )
 
 @router.get("/", response_model=list[SBooking])
-async def get_bookings(db: Annotated[AsyncSession, Depends(get_db)]):
-    result = await BookingService.find_all(db)
-    return result
+async def get_bookings(db: Annotated[AsyncSession, Depends(get_db)], request: Request):
+    return dir(request)
 
 
 
