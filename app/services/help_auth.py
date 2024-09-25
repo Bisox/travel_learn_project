@@ -1,12 +1,15 @@
 from datetime import datetime, timedelta
+from typing import Annotated
 
-from fastapi import Request, HTTPException
-from jose import jwt
+from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import Request, HTTPException, Depends, status
+from jose import jwt, JWTError
 from passlib.context import CryptContext
 from pydantic import EmailStr
 
 from config import settings
 from app.services.usersevices import UserService
+from app.backend.db_depend import get_db
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -27,15 +30,11 @@ def create_access_token(data: dict) -> str:
     return encoded_jwt
 
 
-
-
 async def authenticate_user(db, email: EmailStr, password: str):
     user = await UserService.find_one_or_none(db, email=email)
     if not user and not verify_password(password, user.password):
         return None
     return user
-
-
 
 
 def get_token(request: Request):
@@ -45,6 +44,20 @@ def get_token(request: Request):
     return token
 
 
+async def get_current_user(db: Annotated[AsyncSession, Depends(get_db)], token: Annotated[str, Depends(get_token)]):
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, settings.ALGORITHM)
 
-def get_current_user():
-    ...
+    except JWTError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Token is invalid')
+    expire: str = payload.get("exp")
+    if (not expire) or (int(expire) < datetime.now().timestamp()):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Token is expired')
+    user_id: str = payload.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User does not exist')
+    user = await UserService.find_by_id(db, model_id=int(user_id))
+    if not user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User does not exist')
+    return user
+

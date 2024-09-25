@@ -3,6 +3,7 @@ from app.routers import bookings, users
 
 app = FastAPI()
 
+
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
@@ -14,6 +15,5 @@ async def say_hello(name: str):
 
 app.include_router(users.router)
 app.include_router(bookings.router)
-
 
 

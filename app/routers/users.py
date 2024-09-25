@@ -5,10 +5,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Annotated
 
 
-
 from app.backend.db_depend import get_db
-from app.services.help_auth import get_password_hash, authenticate_user
-from app.services.help_auth import verify_password, create_access_token
+from app.services.help_auth import get_password_hash, authenticate_user, verify_password, create_access_token
 from schemas import SUserAuth
 from app.services.usersevices import UserService
 
@@ -28,7 +26,7 @@ async def register_user(db: Annotated[AsyncSession, Depends(get_db)], response: 
     user = await authenticate_user(db, user_data.email, user_data.password)
     if not user:
         raise HTTPException(status_code=401, detail="Incorrect email or password")
-    access_token = create_access_token({'sub': user.id})
+    access_token = create_access_token({'sub': str(user.id)})
     response.set_cookie(key='booking_access_token', value=access_token, httponly=True)
     return {'access_token': access_token}
 
