@@ -6,7 +6,9 @@ from typing import Annotated
 
 
 from app.backend.db_depend import get_db
-from app.services.help_auth import get_password_hash, authenticate_user, verify_password, create_access_token
+from app.services.help_auth import get_password_hash, authenticate_user, verify_password, create_access_token, \
+    get_current_user
+from app.models.users import User
 from schemas import SUserAuth
 from app.services.usersevices import UserService
 
@@ -30,3 +32,12 @@ async def register_user(db: Annotated[AsyncSession, Depends(get_db)], response: 
     response.set_cookie(key='booking_access_token', value=access_token, httponly=True)
     return {'access_token': access_token}
 
+
+@router.post("/logout")
+async def logout_user(response: Response):
+    response.delete_cookie(key='booking_access_token')
+
+
+@router.get("/me")
+async def read_users_me(current_user: Annotated[User, Depends(get_current_user)]):
+    return current_user
